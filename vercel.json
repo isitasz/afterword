@@ -8,7 +8,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://afterword-api-b18y.onrender.com/api/:path*"
+      "destination": "https://afterword-api-bi8y.onrender.com/api/:path*"
     }
   ]
 }
