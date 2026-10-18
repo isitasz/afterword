@@ -121,7 +121,7 @@ the local profile runs at `http://localhost:5000`. the website and API are serve
 
 1. **gitHub:** push the project code. `.gitignore` excludes local configuration, secrets, generated files, the temporary folder, and the old Avalonia files. `configuration.example.json` contains only empty fields and can be committed.
 2. **render:** create the service from `render.yaml`. Set `NEON_CONNECTION_STRING`, `Admin__Username`, `Admin__Password`, and `APP_SETTINGS_ENCRYPTION_KEY` as service secrets. Use the same encryption key as the one used for API keys already stored in the database.
-3. **vercel:** import the same repository and set `AFTERWORD_API_ORIGIN` to the public HTTPS URL of the Render API, without a trailing slash. The build runs `npm run build` and generates the first static snapshot from the database.
+3. **vercel:** import the same repository with the framework preset set to **Other** and set `AFTERWORD_API_ORIGIN` to the public HTTPS URL of the Render API, without a trailing slash. The root `vercel.json` configures the static output (`wwwroot`) and proxies `/api/*` to the Render service. The build runs `npm run build` and generates the first static snapshot from the database. If the Render service URL changes, update the rewrite destination in `vercel.json` too.
 4. **automatic updates:** create a Deploy Hook for the production branch in the Vercel project's Git settings. Then add its URL manually as `VERCEL_DEPLOY_HOOK` in the Render service's environment variables. This URL is secret and must not be committed to GitHub.
 5. **validation and backups:** open the deployed catalogs, test admin login and CRUD operations, confirm that a write triggers a new deployment, and configure a database backup plan.
 
