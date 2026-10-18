@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/generate-catalog-snapshot.mjs"
+  }
+}

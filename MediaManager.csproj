@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Afterword.Api</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Keep old desktop-only files out of the web API build when present locally. -->
+    <Compile Remove="App.axaml.cs;MainWindow.axaml.cs;Models/Configuration.cs;Storage/JsonStorage.cs" />
+  </ItemGroup>
+</Project>

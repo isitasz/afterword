@@ -1,0 +1,26 @@
+# Local secrets and settings
+/configuration.json
+/configuration.local.json
+/appsettings.Development.json
+/.env
+/.env.*
+!/.env.example
+
+# Generated build output
+**/bin/
+**/obj/
+/.vs/
+*.user
+*.suo
+/.vercel/
+/wwwroot/catalog-data/
+
+# Temporary materials and retired desktop app (kept only in the local copy)
+/temp/
+/App.axaml
+/App.axaml.cs
+/MainWindow.axaml
+/MainWindow.axaml.cs
+/app.manifest
+/Models/Configuration.cs
+/Storage/JsonStorage.cs

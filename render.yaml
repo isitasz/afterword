@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: afterword-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: NEON_CONNECTION_STRING
+        sync: false
+      - key: Admin__Username
+        sync: false
+      - key: Admin__Password
+        sync: false
+      - key: APP_SETTINGS_ENCRYPTION_KEY
+        sync: false

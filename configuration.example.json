@@ -1,0 +1,12 @@
+{
+  "ExternalApis": {
+    "GoogleBooksApiKey": "",
+    "TmdbApiKey": "",
+    "RawgApiKey": ""
+  },
+  "Admin": {
+    "Username": "",
+    "Password": ""
+  },
+  "AppSettingsEncryptionKey": ""
+}
