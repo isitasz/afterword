@@ -120,15 +120,17 @@ the local profile runs at `http://localhost:5000`. the website and API are serve
 ## deployment: GitHub, Render, Vercel, and Neon
 
 1. **gitHub:** push the project code. `.gitignore` excludes local configuration, secrets, generated files, the temporary folder, and the old Avalonia files. `configuration.example.json` contains only empty fields and can be committed.
-2. **render:** create the service from `render.yaml`. Set `NEON_CONNECTION_STRING`, `Admin__Username`, `Admin__Password`, and `APP_SETTINGS_ENCRYPTION_KEY` as service secrets. Use the same encryption key as the one used for API keys already stored in the database.
+2. **render:** create the service from `render.yaml`. Set `NEON_CONNECTION_STRING`, `Admin__Username`, `Admin__Password`, and `APP_SETTINGS_ENCRYPTION_KEY` as service secrets. The encryption key is separate from the Google Books, TMDB, and RAWG API keys; use the same encryption key if those API keys were already saved in Neon.
 3. **vercel:** import the same repository with the framework preset set to **Other** and set `AFTERWORD_API_ORIGIN` to the public HTTPS URL of the Render API, without a trailing slash. The root `vercel.json` configures the static output (`wwwroot`) and proxies `/api/*` to the Render service. The build runs `npm run build` and generates the first static snapshot from the database. If the Render service URL changes, update the rewrite destination in `vercel.json` too.
-4. **automatic updates:** create a Deploy Hook for the production branch in the Vercel project's Git settings. Then add its URL manually as `VERCEL_DEPLOY_HOOK` in the Render service's environment variables. This URL is secret and must not be committed to GitHub.
-5. **validation and backups:** open the deployed catalogs, test admin login and CRUD operations, confirm that a write triggers a new deployment, and configure a database backup plan.
+4. **move the external API keys:** the keys in your local `configuration.json` are not sent to GitHub or copied to Render. After the website is deployed, open `/admin`, sign in, and select the gear-shaped **Settings** tab. Copy `ExternalApis.GoogleBooksApiKey`, `ExternalApis.TmdbApiKey`, and `ExternalApis.RawgApiKey` from your private local `configuration.json` into their matching fields, then save. The API encrypts the keys and stores them in Neon. Before saving, make sure `APP_SETTINGS_ENCRYPTION_KEY` is set on Render. The fields stay blank after saving; the status beside each field shows whether a key is configured. Do not put these API keys in `vercel.json`, GitHub, or Vercel environment variables.
+5. **automatic updates:** create a Deploy Hook for the production branch in the Vercel project's Git settings. Then add its URL manually as `VERCEL_DEPLOY_HOOK` in the Render service's environment variables. This URL is secret and must not be committed to GitHub.
+6. **validation and backups:** open the deployed catalogs, test admin login and CRUD operations, confirm that a write triggers a new deployment, and configure a database backup plan.
 
 ## security and local files
 
 - `configuration.json`, connection strings, passwords, API keys, `APP_SETTINGS_ENCRYPTION_KEY`, and `VERCEL_DEPLOY_HOOK` must not be committed to the repository.
-- API keys saved through the admin panel are encrypted before they are written to Neon. The encryption key belongs only in the server environment.
+- The API keys in local `configuration.json` are not automatically available to the hosted API. Copy them through `/admin` → **Settings** after deployment; the panel encrypts them before storing them in Neon.
+- `APP_SETTINGS_ENCRYPTION_KEY` is the separate encryption key used by the server to protect API keys in Neon. Keep it in the Render environment, not in Vercel or GitHub.
 - `wwwroot/catalog-data/` is generated during deployment and is also excluded from Git.
 
 ## API routes
