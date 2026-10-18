@@ -48,9 +48,9 @@ function showLogin(){document.getElementById('dashboard').classList.add('hidden'
 function showDashboard(){document.getElementById('login-view').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');}
 
 document.getElementById('login-form').addEventListener('submit',async event=>{
-  event.preventDefault();message('login-message','Signing in...');
-  const form=new FormData(event.currentTarget);
-  try{await api('/api/admin/login',{method:'POST',body:JSON.stringify({username:form.get('username'),password:form.get('password')})});event.currentTarget.reset();showDashboard();renderNav();await showSection('books');}
+  event.preventDefault();const loginForm=event.currentTarget;message('login-message','Signing in...');
+  const form=new FormData(loginForm);
+  try{await api('/api/admin/login',{method:'POST',body:JSON.stringify({username:form.get('username'),password:form.get('password')})});loginForm.reset();showDashboard();renderNav();await showSection('books');}
   catch(error){message('login-message',error.message,'error');}
 });
 document.getElementById('logout').addEventListener('click',async()=>{try{await api('/api/admin/logout',{method:'POST'});}catch{}showLogin();});
@@ -148,9 +148,9 @@ async function renderSettings(){
     for(const [key,label] of Object.entries(labels))document.getElementById(`state-${key}`).textContent=settings[`${key[0].toLowerCase()}${key.slice(1)}Configured`]? '· configured on server':'· not configured';
   }catch(error){message('settings-message',error.message,'error');}
   document.getElementById('settings-form').addEventListener('submit',async event=>{
-    event.preventDefault();const form=new FormData(event.currentTarget);const body={googleBooksApiKey:form.get('GoogleBooksApiKey'),tmdbApiKey:form.get('TmdbApiKey'),rawgApiKey:form.get('RawgApiKey')};
+    event.preventDefault();const settingsForm=event.currentTarget;const form=new FormData(settingsForm);const body={googleBooksApiKey:form.get('GoogleBooksApiKey'),tmdbApiKey:form.get('TmdbApiKey'),rawgApiKey:form.get('RawgApiKey')};
     const button=document.getElementById('save-settings');button.disabled=true;message('settings-message','Saving encrypted keys...');
-    try{const settings=await api('/api/admin/settings',{method:'PUT',body:JSON.stringify(body)});event.currentTarget.reset();for(const [key] of Object.entries(labels))document.getElementById(`state-${key}`).textContent=settings[`${key[0].toLowerCase()}${key.slice(1)}Configured`]? '· configured on server':'· not configured';message('settings-message','Settings saved.','success');}
+    try{const settings=await api('/api/admin/settings',{method:'PUT',body:JSON.stringify(body)});settingsForm.reset();for(const [key] of Object.entries(labels))document.getElementById(`state-${key}`).textContent=settings[`${key[0].toLowerCase()}${key.slice(1)}Configured`]? '· configured on server':'· not configured';message('settings-message','Settings saved.','success');}
     catch(error){message('settings-message',error.message,'error');}
     finally{button.disabled=false;}
   });
