@@ -5,28 +5,22 @@ a cloud-based media manager tracking books, games, movies & anime, featuring an 
 this project marks the evolution of a local c# desktop application (which originally exported static json logs) into a fully decoupled, api-first web architecture backed by postgresql. it is designed from the ground up to serve as a foundation for an automated data engineering pipeline (elt) and habit analytics platform.
 
 
-## roadmap
+## Roadmap
 
 ### V1 — online catalog
 
 first release · functional MVP
 
-the goal is to add and manage media through a browser and keep the public catalog available for visitors.
-
-#### V1 milestones
-
 - [x] **connect C# to neon:** persist data in PostgreSQL instead of local JSON files.
 - [x] **turn C# into a web API:** routes to read and manage books, games, movies, and anime.
 - [x] **build the web interface:** public catalog and `/admin` panel with login, title search through external APIs, forms, editing, deletion, and API key settings.
 - [x] **migrate the old catalogs:** records imported from the JSON files are stored in Neon; review the counts for each category before launch.
-- [ ] **complete the catalog scope:** individual detail pages and consumption statuses (planned, in progress, completed, and abandoned) are not implemented yet.
-- [ ] **deploy and validate:** host the API and website, test the complete workflow, and configure backups.
+- [x] **complete the catalog scope:** individual detail pages and consumption statuses (planned, in progress, completed, and abandoned).
+- [x] **deploy and validate:** host the API and website and validate the complete workflow.
 
-#### launch criteria
+**launch criteria:** ; the API, admin panel, and public catalog are deployed. you can create, edit, and delete media through the browser. catalog changes made through the admin panel trigger a new Vercel deployment so the public static catalog can be refreshed. the data remains available even when the free API service is suspended.
 
-you can create, edit, and delete media through the browser; the public catalog displays the saved data; and the data remains available even when the free API service is suspended.
-
-**current status:** the API, admin panel, and catalog work locally. the Vercel + Render configuration is prepared, but the services still need to be deployed and automatic catalog updates need to be validated online.
+**status:** complete.
 
 ### V2 — history and watchlist
 
@@ -40,6 +34,8 @@ turn the catalog into a source of historical data.
 - initial statistics: waiting time, items completed per year, and genre distribution.
 
 **launch criteria:** the system can answer not only what you are currently consuming, but also how your habits change over time.
+
+**status:** on-going.
 
 ### V3 — data engineering pipeline
 
@@ -55,6 +51,8 @@ deepen the development.
 
 **launch criteria:** there is a reproducible ingestion and transformation workflow, not just manually run SQL queries.
 
+**status:** not yet started.
+
 ### V4 — analytics and refinement
 
 optional improvements.
@@ -68,11 +66,13 @@ optional improvements.
 
 **completion criteria:** the application and pipeline are documented, tested, and ready to present.
 
-## how the project works today
+**status:** not yet started.
+
+## How the project works
 
 | part | technology | responsibility |
 | --- | --- | --- |
-| Wwbsite and admin panel | HTML, CSS, and JavaScript | public catalog and `/admin` area |
+| Website and admin panel | HTML, CSS, and JavaScript | public catalog and `/admin` area |
 | API | C# and ASP.NET Core 10 | admin login, external API integrations, and read/write operations |
 | database | neon PostgreSQL and Npgsql | books, games, movies, anime, and API key settings |
 | published website | vercel | serves the pages and the static catalog snapshot |
@@ -90,7 +90,7 @@ after an item is created, edited, deleted, or its cover is refreshed through the
 
 games, movies, and anime use image URLs provided by external APIs. the catalog stores those URLs with the metadata instead of copying the images into the database.
 
-## run locally
+## Run locally
 
 ### requirements
 
@@ -117,7 +117,7 @@ dotnet run --project MediaManager.csproj --launch-profile Afterword.Api
 
 the local profile runs at `http://localhost:5000`. the website and API are served together: open `/` for the catalog and `/admin` for the admin panel. in development, the pages call the API directly.
 
-## deployment: GitHub, Render, Vercel, and Neon
+## Deployment: GitHub, Render, Vercel, and Neon
 
 1. **gitHub:** push the project code. `.gitignore` excludes local configuration, secrets, generated files, the temporary folder, and the old Avalonia files. `configuration.example.json` contains only empty fields and can be committed.
 2. **render:** create the service from `render.yaml`. Set `NEON_CONNECTION_STRING`, `Admin__Username`, `Admin__Password`, and `APP_SETTINGS_ENCRYPTION_KEY` as service secrets. The encryption key is separate from the Google Books, TMDB, and RAWG API keys; use the same encryption key if those API keys were already saved in Neon.
@@ -126,7 +126,7 @@ the local profile runs at `http://localhost:5000`. the website and API are serve
 5. **automatic updates:** create a Deploy Hook for the production branch in the Vercel project's Git settings. Then add its URL manually as `VERCEL_DEPLOY_HOOK` in the Render service's environment variables. This URL is secret and must not be committed to GitHub.
 6. **validation and backups:** open the deployed catalogs, test admin login and CRUD operations, confirm that a write triggers a new deployment, and configure a database backup plan.
 
-## security and local files
+## Security and local files
 
 - `configuration.json`, connection strings, passwords, API keys, `APP_SETTINGS_ENCRYPTION_KEY`, and `VERCEL_DEPLOY_HOOK` must not be committed to the repository.
 - The API keys in local `configuration.json` are not automatically available to the hosted API. Copy them through `/admin` → **Settings** after deployment; the panel encrypts them before storing them in Neon.
@@ -152,3 +152,4 @@ the local profile runs at `http://localhost:5000`. the website and API are serve
 | GET | `/api/admin/session` | Checks the current session |
 | POST | `/api/admin/logout` | Ends the session |
 | GET / PUT | `/api/admin/settings` | Reads and saves API key settings |
+
